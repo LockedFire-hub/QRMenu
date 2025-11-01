@@ -93,6 +93,7 @@
       async function init() {
         try {
           const res = await fetch("https://script.google.com/macros/s/AKfycbx1cDYUkRYW99CF1avc0bkicI4j0ny2Y9OZ9pwLaQBIs0KCg4QfjahadIiJZ-1wfDca/exec");
+          if (!res.ok) throw new Error("HTTP " + res.status);
           data = await res.json();
 
           if (data.settings && data.settings.logo) {
@@ -107,7 +108,8 @@
           document.getElementById("main").classList.remove("hidden");
         } catch (err) {
           console.error("API fetch error:", err);
-          document.getElementById("loading").innerHTML = "<p class='text-red-400 text-center'>Veri yüklenemedi.</p>";
+          document.getElementById("loading").innerHTML =
+            "<p class='text-red-400 text-center'>Veri yüklenemedi.</p>";
         }
       }
 
@@ -153,39 +155,37 @@
             </li>
           `);
           $menu_items.append($categoryHeader);
- items.forEach((item) => {
-            const { id, name, price, image, description } = item;
-            const $item = $(`
-              <li class="bg-gray-800 rounded-lg shadow-md hover:shadow-pink-500/30 
-                         transition transform hover:-translate-y-1">
-                <div class="flex flex-col h-full p-4">
-                  <div class="flex justify-between items-start">
-                    <div>
-                      <p id="item_name${id}" class="text-lg font-bold text-gray-100"></p>
-                      <p id="item_price${id}" class="text-sm text-pink-400 mt-1"></p>
-                    </div>
-                    ${image ? `<img id="item_image${id}" class="h-20 w-20 object-cover rounded-md border border-gray-700" />` : ""}
+
+                 items.forEach((item) => {
+          const { id, name, price, image, description } = item;
+          const $item = $(`
+            <li class="bg-gray-800 rounded-lg shadow-md hover:shadow-pink-500/30 
+                       transition transform hover:-translate-y-1">
+              <div class="flex flex-col h-full p-4">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <p id="item_name${id}" class="text-lg font-bold text-gray-100"></p>
+                    <p id="item_price${id}" class="text-sm text-pink-400 mt-1"></p>
                   </div>
-                  <p id="item_description${id}" class="mt-3 text-sm text-gray-400 line-clamp-3"></p>
+                  ${image ? `<img id="item_image${id}" class="h-20 w-20 object-cover rounded-md border border-gray-700" />` : ""}
                 </div>
-              </li>
-            `);
-            $menu_items.append($item);
-            $(`#item_name${id}`).text(name);
-            $(`#item_price${id}`).text(`${settings.currency}${price}`);
-            if (image) {
-              $(`#item_image${id}`).attr('src',
-$(`#item_image${id}`).attr('src', image).attr('alt', name);
-            }
-            $(`#item_description${id}`).text(String(description));
-          });
+                <p id="item_description${id}" class="mt-3 text-sm text-gray-400 line-clamp-3"></p>
+              </div>
+            </li>
+          `);
+          $menu_items.append($item);
+          $(`#item_name${id}`).text(name);
+          $(`#item_price${id}`).text(`${settings.currency}${price}`);
+          if (image) {
+            $(`#item_image${id}`).attr('src', image).attr('alt', name);
+          }
+          $(`#item_description${id}`).text(String(description));
         });
-      };
+      });
+    };
 
-      // Sayfa yüklenince init fonksiyonunu çağır
-      document.addEventListener("DOMContentLoaded", init);
-    </script>
-  </body>
+    // Sayfa yüklenince init fonksiyonunu çağır
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
 </html>
-
-
