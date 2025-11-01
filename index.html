@@ -1,43 +1,175 @@
-<!doctype html>
-<html lang="tr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>QRMenu</title>
-  <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; padding:20px; background:#f7f7f8; color:#111; }
-    .container { max-width:720px; margin:24px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
-    header { display:flex; align-items:center; gap:16px; }
-    header h1 { margin:0; font-size:1.4rem; }
-    .qr-placeholder { width:96px; height:96px; background:linear-gradient(135deg,#eee,#ddd); display:inline-block; border-radius:8px; flex:0 0 96px; }
-    .intro { margin-top:12px; color:#444; }
-    .menu { margin-top:18px; }
-    .item { padding:12px 10px; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; }
-    .price { color:#2a9d8f; font-weight:600; }
-    footer { margin-top:18px; font-size:0.9rem; color:#666; text-align:center; }
-    @media (max-width:420px){ .qr-placeholder { width:72px; height:72px } }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <div class="qr-placeholder" aria-hidden="true"></div>
-      <div>
-        <h1>QRMenu</h1>
-        <div class="intro">Hoş geldiniz — menüyü görüntülemek için QR kodunu tarayın veya aşağıdan göz atın.</div>
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-thumb { background-color: #4b5563; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background-color: #9ca3af; }
+      .glass { backdrop-filter: blur(12px); background: rgba(31, 41, 55, 0.8); }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-gray-100 min-h-screen font-sans">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 glass shadow-md border-b border-gray-700">
+      <div class="container mx-auto flex flex-col md:flex-row items-center justify-between p-4">
+        <!-- Logo & Title -->
+        <div class="flex items-center space-x-3 mb-3 md:mb-0">
+          <img id="logo_img" src="" alt="Logo" class="h-12 w-12 rounded-lg shadow-md" />
+          <h1 class="text-xl md:text-2xl font-bold tracking-wide">Our Menu</h1>
+        </div>
+        <!-- Toolbar -->
+        <div class="flex w-full md:w-auto space-x-4">
+          <!-- Category -->
+          <div class="relative w-1/2 md:w-48">
+            <label for="category" class="block text-xs font-medium text-gray-300 mb-1">Category</label>
+            <div class="relative">
+              <select
+                id="category"
+                name="category"
+                onchange="setItems()"
+                class="block w-full appearance-none rounded-xl p-2 pr-8 text-gray-100 
+                       bg-gray-800/80 border border-gray-700 shadow-sm 
+                       focus:ring-2 focus:ring-pink-500 focus:border-pink-500 
+                       transition ease-in-out duration-200"
+              >
+                <option selected value="">All</option>
+              </select>
+              <!-- Sağdaki ok ikonu -->
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 20 20" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 8l4 4 4-4" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <!-- Search -->
+          <div class="flex-1">
+            <label for="search" class="block text-xs font-medium text-gray-300 mb-1">Search</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z" />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="search"
+                onkeyup="setItems()"
+                class="block w-full p-2 pl-10 text-sm rounded-xl bg-gray-800 border border-gray-700 
+                       text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-pink-500 
+                       transition ease-in-out duration-200"
+                placeholder="Search..."
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </header>
 
-    <section class="menu" aria-label="Menü">
-      <div class="item"><span>Margherita Pizza</span><span class="price">₺85</span></div>
-      <div class="item"><span>Izgara Tavuk</span><span class="price">₺110</span></div>
-      <div class="item"><span>Sebzeli Salata</span><span class="price">₺55</span></div>
-      <div class="item"><span>Ev Yapımı Tatlı</span><span class="price">₺40</span></div>
-    </section>
+    <!-- Menu Items -->
+    <main class="container mx-auto px-4 py-10">
+      <ul id="menu_items" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Items dynamically injected -->
+      </ul>
+    </main>
 
-    <footer>
-      Bu sayfa örnek amaçlı oluşturulmuştur. Repository: LockedFire-hub/QRMenu
-    </footer>
-  </div>
-</body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      let data = null;
+
+      async function init() {
+        try {
+          const res = await fetch("https://script.google.com/macros/s/AKfycbx1cDYUkRYW99CF1avc0bkicI4j0ny2Y9OZ9pwLaQBIs0KCg4QfjahadIiJZ-1wfDca/exec");
+          data = await res.json();
+
+          if (data.settings && data.settings.logo) {
+            $("#logo_img").attr('src', data.settings.logo);
+          }
+          setCategory();
+          setItems();
+        } catch (err) {
+          console.error("API fetch error:", err);
+        }
+      }
+
+      const setCategory = () => {
+        const $category = $('#category');
+        $category.find("option:not([value=''])").remove(); // temizle
+        const { categories } = data;
+        categories.forEach((name) => {
+          const $option = $(`<option value="${name}">${name}</option>`);
+          $category.append($option);
+        });
+      };
+
+      const setItems = () => {
+        const $category = $('#category');
+        const selected_category = $category.val();
+        const $menu_items = $('#menu_items');
+        $menu_items.empty();
+
+        const search_text = $('#search').val().toLowerCase();
+        const { categories, menu_items, settings } = data;
+
+        const category_list = selected_category ? [selected_category] : categories;
+        const menu = {};
+
+        category_list.forEach((category) => {
+          menu_items.forEach((item) => {
+            const { name, price, image, category: item_category } = item;
+            if (category !== item_category) return;
+            if (search_text && name.toLowerCase().indexOf(search_text) === -1) return;
+            if (!menu[category]) menu[category] = [item];
+            else menu[category].push(item);
+          });
+        });
+
+        category_list.forEach((category, i) => {
+          const items = menu[category];
+          if (!items) return;
+
+          const $categoryHeader = $(`
+            <li class="col-span-full">
+              <h3 class="text-xl font-semibold text-pink-400 border-b border-gray-700 pb-2 mb-4">${category}</h3>
+            </li>
+          `);
+          $menu_items.append($categoryHeader);
+
+          items.forEach((item) => {
+            const { id, name, price, image, description } = item;
+            const $item = $(`
+              <li class="bg-gray-800 rounded-lg shadow-md hover:shadow-pink-500/30 
+                         transition transform hover:-translate-y-1">
+                <div class="flex flex-col h-full p-4">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p id="item_name${id}" class="text-lg font-bold text-gray-100"></p>
+                      <p id="item_price${id}" class="text-sm text-pink-400 mt-1"></p>
+                    </div>
+                    ${image ? `<img id="item_image${id}" class="h-20 w-20 object-cover rounded-md border border-gray-700" />` : ""}
+                  </div>
+                  <p id="item_description${id}" class="mt-3 text-sm text-gray-400 line-clamp-3"></p>
+                </div>
+              </li>
+            `);
+            $menu_items.append($item);
+            $(`#item_name${id}`).text(name);
+            $(`#item_price${id}`).text(`${settings.currency}${price}`);
+            if (image) {
+              $(`#item_image${id}`).attr('src', image).attr('alt', name);
+            }
+            $(`#item_description${id}`).text(String(description));
+          });
+        });
+      };
+
+      init();
+    </script>
+  </body>
 </html>
