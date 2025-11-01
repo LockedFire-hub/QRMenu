@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QRMenu</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; padding:20px; background:#f7f7f8; color:#111; }
+    .container { max-width:720px; margin:24px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+    header { display:flex; align-items:center; gap:16px; }
+    header h1 { margin:0; font-size:1.4rem; }
+    .qr-placeholder { width:96px; height:96px; background:linear-gradient(135deg,#eee,#ddd); display:inline-block; border-radius:8px; flex:0 0 96px; }
+    .intro { margin-top:12px; color:#444; }
+    .menu { margin-top:18px; }
+    .item { padding:12px 10px; border-bottom:1px solid #f0f0f0; display:flex; justify-content:space-between; }
+    .price { color:#2a9d8f; font-weight:600; }
+    footer { margin-top:18px; font-size:0.9rem; color:#666; text-align:center; }
+    @media (max-width:420px){ .qr-placeholder { width:72px; height:72px } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="qr-placeholder" aria-hidden="true"></div>
+      <div>
+        <h1>QRMenu</h1>
+        <div class="intro">Hoş geldiniz — menüyü görüntülemek için QR kodunu tarayın veya aşağıdan göz atın.</div>
+      </div>
+    </header>
+
+    <section class="menu" aria-label="Menü">
+      <div class="item"><span>Margherita Pizza</span><span class="price">₺85</span></div>
+      <div class="item"><span>Izgara Tavuk</span><span class="price">₺110</span></div>
+      <div class="item"><span>Sebzeli Salata</span><span class="price">₺55</span></div>
+      <div class="item"><span>Ev Yapımı Tatlı</span><span class="price">₺40</span></div>
+    </section>
+
+    <footer>
+      Bu sayfa örnek amaçlı oluşturulmuştur. Repository: LockedFire-hub/QRMenu
+    </footer>
+  </div>
+</body>
+</html>
