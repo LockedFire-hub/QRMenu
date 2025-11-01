@@ -13,8 +13,16 @@
     </style>
   </head>
   <body class="bg-gray-900 text-gray-100 min-h-screen font-sans">
+    <!-- Loading Screen -->
+    <div id="loading" class="fixed inset-0 flex items-center justify-center bg-gray-900 z-50">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-pink-500 mx-auto mb-4"></div>
+        <p class="text-lg font-semibold text-gray-200">Yükleniyor... Lütfen bekleyin</p>
+      </div>
+    </div>
+
     <!-- Header -->
-    <header class="sticky top-0 z-50 glass shadow-md border-b border-gray-700">
+    <header id="header" class="sticky top-0 z-40 glass shadow-md border-b border-gray-700 hidden">
       <div class="container mx-auto flex flex-col md:flex-row items-center justify-between p-4">
         <!-- Logo & Title -->
         <div class="flex items-center space-x-3 mb-3 md:mb-0">
@@ -38,7 +46,6 @@
               >
                 <option selected value="">All</option>
               </select>
-              <!-- Sağdaki ok ikonu -->
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                 <svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none"
                      viewBox="0 0 20 20" stroke="currentColor">
@@ -73,7 +80,7 @@
     </header>
 
     <!-- Menu Items -->
-    <main class="container mx-auto px-4 py-10">
+    <main id="main" class="container mx-auto px-4 py-10 hidden">
       <ul id="menu_items" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <!-- Items dynamically injected -->
       </ul>
@@ -93,14 +100,20 @@
           }
           setCategory();
           setItems();
+
+          // Loading ekranını gizle, içerikleri göster
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("header").classList.remove("hidden");
+          document.getElementById("main").classList.remove("hidden");
         } catch (err) {
           console.error("API fetch error:", err);
+          document.getElementById("loading").innerHTML = "<p class='text-red-400 text-center'>Veri yüklenemedi.</p>";
         }
       }
 
       const setCategory = () => {
         const $category = $('#category');
-        $category.find("option:not([value=''])").remove(); // temizle
+        $category.find("option:not([value=''])").remove();
         const { categories } = data;
         categories.forEach((name) => {
           const $option = $(`<option value="${name}">${name}</option>`);
@@ -130,7 +143,7 @@
           });
         });
 
-        category_list.forEach((category, i) => {
+        category_list.forEach((category) => {
           const items = menu[category];
           if (!items) return;
 
@@ -140,8 +153,7 @@
             </li>
           `);
           $menu_items.append($categoryHeader);
-
-          items.forEach((item) => {
+ items.forEach((item) => {
             const { id, name, price, image, description } = item;
             const $item = $(`
               <li class="bg-gray-800 rounded-lg shadow-md hover:shadow-pink-500/30 
@@ -162,14 +174,18 @@
             $(`#item_name${id}`).text(name);
             $(`#item_price${id}`).text(`${settings.currency}${price}`);
             if (image) {
-              $(`#item_image${id}`).attr('src', image).attr('alt', name);
+              $(`#item_image${id}`).attr('src',
+$(`#item_image${id}`).attr('src', image).attr('alt', name);
             }
             $(`#item_description${id}`).text(String(description));
           });
         });
       };
 
-      init();
+      // Sayfa yüklenince init fonksiyonunu çağır
+      document.addEventListener("DOMContentLoaded", init);
     </script>
   </body>
 </html>
+
+
